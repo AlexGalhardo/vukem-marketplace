@@ -129,6 +129,8 @@ jobs:
   e2e:
     name: E2E (Playwright on docker compose)
     runs-on: ubuntu-latest
+    env:
+      MKT_MONGO_TAG: 7.0.45 # see the mongo service of the integration job
     needs: [go, web]
     steps:
       - uses: actions/checkout@v7.0.1

@@ -153,7 +153,8 @@ services:
       retries: 20
 
   mongo:
-    image: mongo:8.3.13
+    # CI sets MKT_MONGO_TAG=7.0.45: MongoDB 8.x fails on the runners' Linux 6.19+ kernel (SERVER-121912).
+    image: mongo:${MKT_MONGO_TAG:-8.3.13}
     ports:
       - "${MKT_MONGO_PORT:-27027}:27017"
     volumes:
