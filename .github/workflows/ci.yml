@@ -89,7 +89,9 @@ jobs:
         options: >-
           --health-cmd "redis-cli ping" --health-interval 5s --health-timeout 3s --health-retries 20
       mongo:
-        image: mongo:8.3.13
+        # MongoDB 8.x (tcmalloc) refuses to start on the runners' Linux 6.19+ kernel (SERVER-121912); 7.0 is
+        # unaffected. Back to the compose version once a fixed 8.x image ships.
+        image: mongo:7.0.45
         ports: ["27017:27017"]
         options: >-
           --health-cmd "mongosh --quiet --eval 'db.adminCommand(\"ping\").ok'" --health-interval 10s --health-timeout 5s --health-retries 20
