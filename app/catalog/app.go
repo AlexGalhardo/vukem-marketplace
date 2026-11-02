@@ -19,10 +19,12 @@ type DiskConfig struct {
 	Driver   string `env:"MEDIA_DISK"`
 	Bucket   string `env:"S3_BUCKET"`
 	Blob     string `env:"BLOB_READ_WRITE_TOKEN"`
-	LocalDir string `env:"MEDIA_LOCAL_DIR" default:"storage/app/media"`
+	LocalDir string `env:"MEDIA_LOCAL_DIR"       default:"storage/app/media"`
 }
 
-var errDiskRequired = errors.New("catalog: BLOB_READ_WRITE_TOKEN or S3_BUCKET is required in production (MEDIA_DISK=vercel-blob or s3)")
+var errDiskRequired = errors.New(
+	"catalog: BLOB_READ_WRITE_TOKEN or S3_BUCKET is required in production (MEDIA_DISK=vercel-blob or s3)",
+)
 
 // OpenDisk returns the image disk configured in src.
 func OpenDisk(src config.Lookuper, env config.Env, test bool) (storage.Disk, error) {

@@ -12,7 +12,6 @@ import (
 	"testing"
 
 	"github.com/AlexGalhardo/vukem/config"
-	"github.com/AlexGalhardo/vukem/storage"
 	"github.com/AlexGalhardo/vukem/storage/storagetest"
 )
 
@@ -41,7 +40,8 @@ func fakeBlob(t *testing.T) *httptest.Server {
 		switch {
 		case r.Method == http.MethodPut:
 			b, _ := io.ReadAll(r.Body)
-			if r.Header.Get("x-add-random-suffix") != "0" || r.Header.Get("x-allow-overwrite") != "1" || r.Header.Get("x-content-type") == "" {
+			if r.Header.Get("x-add-random-suffix") != "0" || r.Header.Get("x-allow-overwrite") != "1" ||
+				r.Header.Get("x-content-type") == "" {
 				http.Error(w, "bad headers", http.StatusBadRequest)
 
 				return
@@ -50,7 +50,9 @@ func fakeBlob(t *testing.T) *httptest.Server {
 			files[name] = b
 			_, _ = w.Write([]byte(`{"pathname":"` + name + `"}`))
 		case r.Method == http.MethodPost && name == "delete":
-			var in struct{ URLs []string }
+			var in struct {
+				URLs []string `json:"urls"`
+			}
 			_ = json.NewDecoder(r.Body).Decode(&in)
 
 			for _, u := range in.URLs {
@@ -106,7 +108,9 @@ func TestVercelBlobPublicURLFromToken(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	if got, want := disk.URL("products/1/a b.jpg"), "https://abc123.public.blob.vercel-storage.com/products/1/a%20b.jpg"; got != want {
+	if got, want := disk.URL(
+		"products/1/a b.jpg",
+	), "https://abc123.public.blob.vercel-storage.com/products/1/a%20b.jpg"; got != want {
 		t.Fatalf("URL = %q, want %q", got, want)
 	}
 
@@ -134,6 +138,4 @@ func TestOpenDiskPicksVercelBlob(t *testing.T) {
 	if _, err := OpenDisk(config.MapSource(nil), config.Production, false); err == nil {
 		t.Fatal("production without a remote disk must fail")
 	}
-
-	var _ storage.Disk = disk
 }

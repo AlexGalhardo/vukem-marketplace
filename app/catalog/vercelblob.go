@@ -25,11 +25,13 @@ import (
 type BlobConfig struct {
 	Token string `env:"BLOB_READ_WRITE_TOKEN"`
 	// APIURL and PublicURL override the Vercel endpoints (tests).
-	APIURL    string `env:"BLOB_API_URL" default:"https://blob.vercel-storage.com"`
+	APIURL    string `env:"BLOB_API_URL"    default:"https://blob.vercel-storage.com"`
 	PublicURL string `env:"BLOB_PUBLIC_URL"`
 }
 
-var errBlobToken = errors.New("catalog: BLOB_READ_WRITE_TOKEN is missing or malformed (vercel_blob_rw_<store>_<secret>)")
+var errBlobToken = errors.New(
+	"catalog: BLOB_READ_WRITE_TOKEN is missing or malformed (vercel_blob_rw_<store>_<secret>)",
+)
 
 // blobAPIVersion is the Vercel Blob REST API version the calls follow.
 const blobAPIVersion = "7"
@@ -146,7 +148,7 @@ func (b *VercelBlob) Open(ctx context.Context, p string) (io.ReadCloser, error) 
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodGet, b.URL(c), nil)
+	req, err := http.NewRequestWithContext(ctx, http.MethodGet, b.URL(c), http.NoBody)
 	if err != nil {
 		return nil, err
 	}
@@ -158,7 +160,7 @@ func (b *VercelBlob) Open(ctx context.Context, p string) (io.ReadCloser, error) 
 
 	switch {
 	case res.StatusCode == http.StatusNotFound:
-		res.Body.Close()
+		_ = res.Body.Close()
 
 		return nil, &fs.PathError{Op: "open", Path: c, Err: fs.ErrNotExist}
 	case res.StatusCode/100 != 2:
@@ -237,7 +239,7 @@ func (b *VercelBlob) List(ctx context.Context, dir string) ([]string, error) {
 			q.Set("cursor", cursor)
 		}
 
-		req, err := http.NewRequestWithContext(ctx, http.MethodGet, b.api+"/?"+q.Encode(), nil)
+		req, err := http.NewRequestWithContext(ctx, http.MethodGet, b.api+"/?"+q.Encode(), http.NoBody)
 		if err != nil {
 			return nil, err
 		}
@@ -260,7 +262,7 @@ func (b *VercelBlob) List(ctx context.Context, dir string) ([]string, error) {
 		}
 
 		err = json.NewDecoder(res.Body).Decode(&page)
-		res.Body.Close()
+		_ = res.Body.Close()
 
 		if err != nil {
 			return nil, fmt.Errorf("vercel blob: list: %w", err)
