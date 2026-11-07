@@ -1,0 +1,367 @@
+[
+  {
+    "coverage_id": ".github%2Fworkflows%2Fci.yml%23checkout::.github%2Fworkflows%2Fci.yml%23permissions::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Obvious%20things",
+    "canonical_refs": {
+      "surface": ".github/workflows/ci.yml#checkout",
+      "boundary": ".github/workflows/ci.yml#permissions",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Obvious things"
+    },
+    "surface": ".github/workflows/ci.yml#checkout",
+    "boundary": ".github/workflows/ci.yml#permissions",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Obvious things",
+    "starting_paths": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/dast.yml",
+      ".github/workflows/release.yml"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Obvious things",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      ".github/workflows/ci.yml",
+      ".github/workflows/dast.yml",
+      ".github/workflows/release.yml"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          ".github/workflows/ci.yml",
+          ".github/workflows/dast.yml",
+          ".github/workflows/release.yml"
+        ],
+        "invariant": "Workflows use least privilege, pinned actions and non-persisted credentials.",
+        "method": "source",
+        "result": "Checkouts persisted credentials and actions were tag-pinned.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "vukem-marketplace-reactjs:ci:checkout-persists-credentials",
+      "vukem-marketplace-reactjs:ci:actions-pinned-by-tag"
+    ],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "app%2Fapi%2Fgraphql.go%23limits::routes%2Fapi.go%23rate-limits::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Resource%20and%20file%20handling",
+    "canonical_refs": {
+      "surface": "app/api/graphql.go#limits",
+      "boundary": "routes/api.go#rate-limits",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Resource and file handling"
+    },
+    "surface": "app/api/graphql.go#limits",
+    "boundary": "routes/api.go#rate-limits",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Resource and file handling",
+    "starting_paths": [
+      "app/api/graphql.go",
+      "routes/api.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "app/api/graphql.go",
+      "routes/api.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "app/api/graphql.go",
+          "routes/api.go"
+        ],
+        "invariant": "GraphQL depth, complexity, body size and rate are bounded.",
+        "method": "source",
+        "result": "Limits set.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "app%2Fcontrollers%2Fcommerce%2Fcheckout.go%23buyerOrder::app%2Fpayments%2Fservice.go%23BuyerOrder::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Access%20control",
+    "canonical_refs": {
+      "surface": "app/controllers/commerce/checkout.go#buyerOrder",
+      "boundary": "app/payments/service.go#BuyerOrder",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Access control"
+    },
+    "surface": "app/controllers/commerce/checkout.go#buyerOrder",
+    "boundary": "app/payments/service.go#BuyerOrder",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Access control",
+    "starting_paths": [
+      "app/controllers/commerce/checkout.go",
+      "app/controllers/commerce/payouts.go",
+      "app/payments/card.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Access control",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "app/controllers/commerce/checkout.go",
+      "app/controllers/commerce/payouts.go",
+      "app/payments/card.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "app/controllers/commerce/checkout.go",
+          "app/controllers/commerce/payouts.go",
+          "app/payments/card.go"
+        ],
+        "invariant": "Orders are scoped to the buyer by public id.",
+        "method": "source",
+        "result": "Buyer and seller scoping hold.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "app%2Fcontrollers%2Fstorefront%2Fstorefront.go%23Media::app%2Fcatalog%2Fimages.go%23MediaObject::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Resource%20and%20file%20handling",
+    "canonical_refs": {
+      "surface": "app/controllers/storefront/storefront.go#Media",
+      "boundary": "app/catalog/images.go#MediaObject",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Resource and file handling"
+    },
+    "surface": "app/controllers/storefront/storefront.go#Media",
+    "boundary": "app/catalog/images.go#MediaObject",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Resource and file handling",
+    "starting_paths": [
+      "app/controllers/storefront/storefront.go",
+      "app/catalog/images.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Resource and file handling",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "app/controllers/storefront/storefront.go",
+      "app/catalog/images.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "app/controllers/storefront/storefront.go",
+          "app/catalog/images.go"
+        ],
+        "invariant": "Media paths are validated; uploads are decoded with size and pixel caps.",
+        "method": "source",
+        "result": "Validated.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "app%2Fwebhooks%2Fwebhooks.go%23Deliver::app%2Fwebhooks%2Fwebhooks.go%23httpclient::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Feature%20abuse%20and%20data%20leakage",
+    "canonical_refs": {
+      "surface": "app/webhooks/webhooks.go#Deliver",
+      "boundary": "app/webhooks/webhooks.go#httpclient",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Feature abuse and data leakage"
+    },
+    "surface": "app/webhooks/webhooks.go#Deliver",
+    "boundary": "app/webhooks/webhooks.go#httpclient",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Feature abuse and data leakage",
+    "starting_paths": [
+      "app/webhooks/webhooks.go",
+      "app/controllers/clientlog.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Feature abuse and data leakage",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "app/webhooks/webhooks.go",
+      "app/controllers/clientlog.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "app/webhooks/webhooks.go",
+          "app/controllers/clientlog.go"
+        ],
+        "invariant": "Outbound calls refuse internal addresses.",
+        "method": "source",
+        "result": "SSRF guard present.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "compose.yaml%23ports::compose.yaml%23environment::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Obvious%20things",
+    "canonical_refs": {
+      "surface": "compose.yaml#ports",
+      "boundary": "compose.yaml#environment",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Obvious things"
+    },
+    "surface": "compose.yaml#ports",
+    "boundary": "compose.yaml#environment",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Obvious things",
+    "starting_paths": [
+      "compose.yaml"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Obvious things",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "compose.yaml"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "compose.yaml"
+        ],
+        "invariant": "Dev services are loopback only.",
+        "method": "source",
+        "result": "Ports were published on all interfaces.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "vukem-marketplace-reactjs:infra:compose-ports-all-interfaces"
+    ],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "routes%2Fauth.go%23login::routes%2Fauth.go%23throttle::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Access%20control",
+    "canonical_refs": {
+      "surface": "routes/auth.go#login",
+      "boundary": "routes/auth.go#throttle",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Access control"
+    },
+    "surface": "routes/auth.go#login",
+    "boundary": "routes/auth.go#throttle",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Access control",
+    "starting_paths": [
+      "routes/auth.go",
+      "routes/two_factor.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Access control",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "covered",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "routes/auth.go",
+      "routes/two_factor.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "routes/auth.go",
+          "routes/two_factor.go"
+        ],
+        "invariant": "Login, reset and 2FA challenge are rate limited.",
+        "method": "source",
+        "result": "Per-IP and per-account limits present.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [],
+    "unresolved": []
+  },
+  {
+    "coverage_id": "routes%2Ftwo_factor.go%23recovery-codes::app%2Fcontrollers%2Faccount%2Ftwo_factor.go%23Disable::profile%2Fquick%2Fall-in-scope-subsystems::ATTACK-CLASSES.md%23Access%20control",
+    "canonical_refs": {
+      "surface": "routes/two_factor.go#recovery-codes",
+      "boundary": "app/controllers/account/two_factor.go#Disable",
+      "subsystem": "profile/quick/all-in-scope-subsystems",
+      "attack_class": "ATTACK-CLASSES.md#Access control"
+    },
+    "surface": "routes/two_factor.go#recovery-codes",
+    "boundary": "app/controllers/account/two_factor.go#Disable",
+    "subsystem": "profile/quick/all-in-scope-subsystems",
+    "attack_class": "ATTACK-CLASSES.md#Access control",
+    "starting_paths": [
+      "routes/two_factor.go",
+      "app/controllers/account/two_factor.go",
+      "app/accounts/two_factor.go"
+    ],
+    "ordinary_attack_class_block": "ATTACK-CLASSES.md#Access control",
+    "selected_companion_blocks": [],
+    "excluded_blocks": [],
+    "prior_status": "none",
+    "attempts": [],
+    "wave": 1,
+    "status": "candidate",
+    "agent_id": "hunter-main",
+    "reviewed_paths": [
+      "routes/two_factor.go",
+      "app/controllers/account/two_factor.go",
+      "app/accounts/two_factor.go"
+    ],
+    "local_checks": [
+      {
+        "agent_id": "hunter-main",
+        "reviewed_paths": [
+          "routes/two_factor.go",
+          "app/controllers/account/two_factor.go",
+          "app/accounts/two_factor.go"
+        ],
+        "invariant": "Sensitive account changes need password re-entry and throttling.",
+        "method": "source",
+        "result": "Regenerate lacked both.",
+        "artifact": null
+      }
+    ],
+    "result_fingerprints": [
+      "vukem-marketplace-reactjs:auth:recovery-codes-no-password"
+    ],
+    "unresolved": []
+  }
+]

@@ -1,0 +1,319 @@
+[
+  {
+    "verdict": "confirmed",
+    "fingerprint": "vukem-marketplace-reactjs:auth:recovery-codes-no-password",
+    "title": "Two-factor recovery codes can be regenerated with a session alone",
+    "description": "POST /user/two-factor/recovery-codes replaced the recovery codes and showed the new ones after only a session check, while disabling two-factor asks for the current password. A hijacked session could mint working second-factor bypass codes.",
+    "root_cause": "No password confirmation or throttle on the regenerate route.",
+    "intended_behavior": "Sensitive two-factor changes require the current password, as Disable does.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "routes/two_factor.go",
+        "line": 40,
+        "scope": "Web",
+        "description": "Authenticated POST with no body."
+      },
+      {
+        "kind": "sink",
+        "file": "app/controllers/account/two_factor.go",
+        "line": 117,
+        "scope": "RegenerateRecoveryCodes",
+        "description": "Codes are replaced and flashed in clear."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "routes/two_factor.go",
+        "line": 41,
+        "description": "Route uses required only."
+      },
+      {
+        "file": "app/controllers/account/two_factor.go",
+        "line": 117,
+        "description": "Handler does not read a password."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "environmental_dependency",
+        "description": "Needs a stolen or left-open authenticated session."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "Holder of a hijacked session.",
+      "payloads": [
+        "none"
+      ],
+      "instructions": [
+        "Sign in, POST /user/two-factor/recovery-codes with an empty body."
+      ],
+      "observed_result": "302 to /user/two-factor with fresh codes in the flash."
+    },
+    "remediation": {
+      "strategy": "The handler parses ConfirmPasswordSchema and verifies the hash, the route gets the confirm throttle, and the page asks for the password. Regression: TestTwoFactorRecoveryCodes.",
+      "code_changes": []
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Needs a hijacked session."
+      },
+      "impact": {
+        "score": "low",
+        "reason": "Gives persistence past the second factor for that account."
+      },
+      "overall_severity": "low"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Visible in the repository files."
+    }
+  },
+  {
+    "verdict": "rejected",
+    "fingerprint": "vukem-marketplace-reactjs:catalog:media-path-traversal",
+    "title": "Media route serves arbitrary files",
+    "description": "/media/{kind}/{id}/{file} builds a storage path from URL parts.",
+    "claimed_root_cause": "/media/{kind}/{id}/{file} builds a storage path from URL parts.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "app/controllers/storefront/storefront.go",
+        "line": 301,
+        "scope": "Media",
+        "description": "Three URL parameters."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "app/controllers/storefront/storefront.go",
+        "line": 301,
+        "description": "catalog.MediaObject validates the path before the disk is opened; responses carry nosniff and a sandbox CSP."
+      }
+    ],
+    "reason": "Path is validated against known object shapes."
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "vukem-marketplace-reactjs:ci:actions-pinned-by-tag",
+    "title": "Third-party GitHub Actions are pinned by mutable tag",
+    "description": "Workflows reference actions by version tag, which the action owner can move. A compromised tag would run attacker code with the job token and secrets.",
+    "root_cause": "uses: owner/action@vX.Y.Z instead of a full commit SHA.",
+    "intended_behavior": "Third-party actions are pinned to a 40-character commit SHA with the version in a trailing comment, as in security-audit.yml.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "scope": "jobs",
+        "description": "Workflow runs resolve the tag at run time."
+      },
+      {
+        "kind": "sink",
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "scope": "uses step",
+        "description": "The resolved code runs with the job token and secrets."
+      }
+    ],
+    "evidence": [
+      {
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "description": "The step is pinned by tag, not SHA."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "environmental_dependency",
+        "description": "Needs the upstream action tag to be moved or its repository compromised."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "Compromised upstream action maintainer or tag.",
+      "payloads": [
+        "none"
+      ],
+      "instructions": [
+        "Inspect the workflows: uses lines end in a version tag."
+      ],
+      "observed_result": "The action code is resolved from a movable tag."
+    },
+    "remediation": {
+      "strategy": "Pin every action to its commit SHA, keeping the version in a comment.",
+      "code_changes": []
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Needs an upstream compromise."
+      },
+      "impact": {
+        "score": "low",
+        "reason": "Release workflows hold packages write and registry credentials."
+      },
+      "overall_severity": "low"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Visible in the repository files."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "vukem-marketplace-reactjs:ci:checkout-persists-credentials",
+    "title": "Workflow checkouts keep the GitHub token in the local git config",
+    "description": "The workflows check out the repository without persist-credentials: false, so the job token stays in .git/config for later steps, including steps that run repository code.",
+    "root_cause": "actions/checkout default persist-credentials: true.",
+    "intended_behavior": "Every checkout sets persist-credentials: false, as scorecard.yml and security-audit.yml do.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "scope": "jobs",
+        "description": "Push and pull_request runs execute the checkout steps."
+      },
+      {
+        "kind": "sink",
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "scope": "checkout step",
+        "description": "Token is written to the workspace git config and stays readable by later steps."
+      }
+    ],
+    "evidence": [
+      {
+        "file": ".github/workflows/ci.yml",
+        "line": 23,
+        "description": "The checkout step has no persist-credentials setting."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "environmental_dependency",
+        "description": "Needs untrusted code running in a later step; the token is limited by the workflow permissions."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "Pull request author whose code runs in a later step.",
+      "payloads": [
+        "none"
+      ],
+      "instructions": [
+        "Inspect the workflows: the checkout steps lack persist-credentials: false."
+      ],
+      "observed_result": "Token remains available in .git/config for subsequent steps."
+    },
+    "remediation": {
+      "strategy": "Add with: persist-credentials: false to every checkout step.",
+      "code_changes": []
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Fork pull requests get a read-only token and same-repo authors already have write access."
+      },
+      "impact": {
+        "score": "informational",
+        "reason": "Token scope is limited by the permissions blocks."
+      },
+      "overall_severity": "informational"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Visible in the repository files."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "vukem-marketplace-reactjs:infra:compose-ports-all-interfaces",
+    "title": "Dev compose stack publishes datastores and mail ports on all interfaces with default credentials",
+    "description": "compose.yaml maps container ports without a host address, so Docker binds them on every interface. The stack uses default credentials (Postgres password, webhook secret or object-store keys).",
+    "root_cause": "Port mappings of the form \"host:container\" without 127.0.0.1.",
+    "intended_behavior": "Local development services are reachable from the local machine only.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "compose.yaml",
+        "line": 48,
+        "scope": "services.*.ports",
+        "description": "docker compose up binds the published ports on 0.0.0.0."
+      },
+      {
+        "kind": "sink",
+        "file": "compose.yaml",
+        "line": 48,
+        "scope": "datastore service",
+        "description": "Default credentials guard the exposed service."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "compose.yaml",
+        "line": 48,
+        "description": "Published port without a host address."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "environmental_dependency",
+        "description": "Needs the developer machine on an untrusted network while the stack runs."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "Another host on the same network.",
+      "payloads": [
+        "none"
+      ],
+      "instructions": [
+        "Run docker compose up and connect to the published Postgres port from another host with the default credentials."
+      ],
+      "observed_result": "Connection accepted from non-loopback interfaces."
+    },
+    "remediation": {
+      "strategy": "Prefix every published port with 127.0.0.1:; a test fails on a bare mapping.",
+      "code_changes": []
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Dev-only stack on a developer machine."
+      },
+      "impact": {
+        "score": "low",
+        "reason": "Dev data only, but defaults are public."
+      },
+      "overall_severity": "low"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "Visible in the repository files."
+    }
+  },
+  {
+    "verdict": "rejected",
+    "fingerprint": "vukem-marketplace-reactjs:webhooks:seller-endpoint-ssrf",
+    "title": "Seller webhook URLs reach internal addresses",
+    "description": "Sellers register arbitrary URLs that the server calls.",
+    "claimed_root_cause": "Sellers register arbitrary URLs that the server calls.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "app/webhooks/webhooks.go",
+        "line": 5,
+        "scope": "Service.Deliver",
+        "description": "Seller-supplied URL."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "app/webhooks/webhooks.go",
+        "line": 5,
+        "description": "Delivery uses httpclient.Safe, which refuses loopback, private and metadata addresses at connect time."
+      }
+    ],
+    "reason": "Blocked at connect time, so DNS rebinding does not help."
+  }
+]
