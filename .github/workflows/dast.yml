@@ -19,6 +19,8 @@ jobs:
       issues: write
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - name: Generate APP_KEY
         run: echo "APP_KEY=base64:$(openssl rand -base64 32)" > .env
       - name: Start the stack

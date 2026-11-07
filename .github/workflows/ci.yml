@@ -21,6 +21,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
@@ -37,6 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version-file: package.json
@@ -50,6 +54,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version-file: package.json
@@ -63,6 +69,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
         with:
+          persist-credentials: false
           fetch-depth: 0
       - uses: oven-sh/setup-bun@v2.2.0
         with:
@@ -121,6 +128,8 @@ jobs:
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: actions/setup-go@v7.0.0
         with:
           go-version-file: go.mod
@@ -134,6 +143,8 @@ jobs:
     needs: [go, web]
     steps:
       - uses: actions/checkout@v7.0.1
+        with:
+          persist-credentials: false
       - uses: oven-sh/setup-bun@v2.2.0
         with:
           bun-version-file: package.json
