@@ -46,8 +46,8 @@ services:
       SCHEDULE_IN_SERVE: "false"
     command: ["sh", "-c", "/app/app migrate && /app/app reference:sync && exec /app/app"]
     ports:
-      - "${MKT_APP_PORT:-3200}:3000"
-      - "${MKT_GRPC_PORT:-50061}:50051"
+      - "127.0.0.1:${MKT_APP_PORT:-3200}:3000"
+      - "127.0.0.1:${MKT_GRPC_PORT:-50061}:50051"
     depends_on:
       postgres:
         condition: service_healthy
@@ -130,7 +130,7 @@ services:
       POSTGRES_PASSWORD: marketplace
       POSTGRES_DB: marketplace
     ports:
-      - "${MKT_PG_PORT:-5442}:5432"
+      - "127.0.0.1:${MKT_PG_PORT:-5442}:5432"
     volumes:
       - postgres:/var/lib/postgresql
     healthcheck:
@@ -143,7 +143,7 @@ services:
     image: redis:8.10.2-alpine
     command: ["redis-server", "--appendonly", "yes"]
     ports:
-      - "${MKT_REDIS_PORT:-6389}:6379"
+      - "127.0.0.1:${MKT_REDIS_PORT:-6389}:6379"
     volumes:
       - redis:/data
     healthcheck:
@@ -156,7 +156,7 @@ services:
     # CI sets MKT_MONGO_TAG=7.0.45: MongoDB 8.x fails on the runners' Linux 6.19+ kernel (SERVER-121912).
     image: mongo:${MKT_MONGO_TAG:-8.3.13}
     ports:
-      - "${MKT_MONGO_PORT:-27027}:27017"
+      - "127.0.0.1:${MKT_MONGO_PORT:-27027}:27017"
     volumes:
       - mongo:/data/db
     healthcheck:
@@ -174,8 +174,8 @@ services:
       RUSTFS_SECRET_KEY: rustfsadmin
       RUSTFS_CONSOLE_ENABLE: "true"
     ports:
-      - "${MKT_S3_PORT:-9200}:9000"
-      - "${MKT_S3_CONSOLE_PORT:-9201}:9001"
+      - "127.0.0.1:${MKT_S3_PORT:-9200}:9000"
+      - "127.0.0.1:${MKT_S3_CONSOLE_PORT:-9201}:9001"
     volumes:
       - rustfs:/data
 
@@ -184,8 +184,8 @@ services:
   mailpit:
     image: axllent/mailpit:v1.31.6
     ports:
-      - "${MKT_SMTP_PORT:-1035}:1025"
-      - "${MKT_MAILPIT_PORT:-8035}:8025"
+      - "127.0.0.1:${MKT_SMTP_PORT:-1035}:1025"
+      - "127.0.0.1:${MKT_MAILPIT_PORT:-8035}:8025"
 
 volumes:
   postgres:
