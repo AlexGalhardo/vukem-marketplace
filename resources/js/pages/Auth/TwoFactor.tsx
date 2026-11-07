@@ -28,6 +28,7 @@ export default function TwoFactor({
 	const { t } = useT();
 	const confirm = useForm({ code: "" });
 	const disable = useForm({ password: "" });
+	const regenerate = useForm({ password: "" });
 
 	const submitConfirm = (e: FormEvent) => {
 		e.preventDefault();
@@ -37,6 +38,11 @@ export default function TwoFactor({
 	const submitDisable = (e: FormEvent) => {
 		e.preventDefault();
 		disable.post("/user/two-factor/disable", { onFinish: () => disable.reset("password") });
+	};
+
+	const submitRegenerate = (e: FormEvent) => {
+		e.preventDefault();
+		regenerate.post("/user/two-factor/recovery-codes", { onFinish: () => regenerate.reset("password") });
 	};
 
 	return (
@@ -61,9 +67,20 @@ export default function TwoFactor({
 					) : (
 						<p>{t("account.two_factor.codes_left", { count: recoveryCodesLeft })}</p>
 					)}
-					<Link href="/user/two-factor/recovery-codes" method="post" as="button" className={secondaryButton}>
-						{t("account.two_factor.regenerate")}
-					</Link>
+					<form onSubmit={submitRegenerate} className="space-y-4">
+						<Field
+							label={t("account.common.current_password")}
+							type="password"
+							autoComplete="current-password"
+							required
+							value={regenerate.data.password}
+							onChange={(e) => regenerate.setData("password", e.target.value)}
+							error={regenerate.errors.password}
+						/>
+						<button type="submit" disabled={regenerate.processing} className={secondaryButton}>
+							{t("account.two_factor.regenerate")}
+						</button>
+					</form>
 					<h2 className={`pt-4 ${subheading}`}>{t("account.two_factor.turn_off")}</h2>
 					<form onSubmit={submitDisable} className="space-y-4">
 						<Field

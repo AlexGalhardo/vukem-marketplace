@@ -39,7 +39,7 @@ func twoFactorRoutes(r *router.Router, app *vukem.App, deps *platform.Deps) erro
 	r.Post("/user/two-factor/confirm", L(h.Confirm)).Name("two-factor.confirm").Use(required, confirm)
 	r.Post("/user/two-factor/recovery-codes", L(h.RegenerateRecoveryCodes)).
 		Name("two-factor.recovery-codes").
-		Use(required)
+		Use(required, confirm)
 	r.Post("/user/two-factor/disable", L(h.Disable)).Name("two-factor.disable").Use(required, confirm)
 
 	r.Get("/two-factor-challenge", L(h.ShowChallenge)).Name("two-factor.login").Use(auth.Guest(acc.Web))

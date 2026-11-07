@@ -178,7 +178,10 @@ func TestTwoFactorRecoveryCodes(t *testing.T) {
 		PropEquals("recoveryCodesLeft", accounts.RecoveryCodeCount-2)
 
 	// Regenerating replaces every code.
-	owner.PostJSON("/user/two-factor/recovery-codes", nil).AssertRedirect("/user/two-factor")
+	rejected(t, owner, "/user/two-factor", "/user/two-factor/recovery-codes", "Auth/TwoFactor", "password",
+		map[string]any{"password": "not my password"})
+	owner.PostJSON("/user/two-factor/recovery-codes", map[string]any{"password": "Correct-Horse-9-Battery"}).
+		AssertRedirect("/user/two-factor")
 
 	if fresh := recoveryCodes(t, owner); len(fresh) != accounts.RecoveryCodeCount || fresh[0] == codes[2] {
 		t.Fatalf("regenerated codes = %v", fresh)
