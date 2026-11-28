@@ -140,7 +140,7 @@ services:
       retries: 20
 
   redis:
-    image: redis:8.10.2-alpine
+    image: redis:8.12.0-alpine
     command: ["redis-server", "--appendonly", "yes"]
     ports:
       - "${MKT_REDIS_PORT:-6389}:6379"
